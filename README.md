@@ -1,8 +1,6 @@
 # reader-lite
 
-Turn an article URL into Markdown.
-
-## How it works
+A weird little local server that turns article URLs into Markdown.
 
 - Fetch HTML over HTTP.
 - If `engine=auto` and the fetch looks blocked, render the page with Playwright (if installed).
@@ -12,10 +10,9 @@ Turn an article URL into Markdown.
 
 ```bash
 npm install
+# http://127.0.0.1:8787
 npm start
 ```
-
-Server defaults to `http://127.0.0.1:8787`.
 
 ## Use
 
@@ -24,10 +21,6 @@ curl 'http://127.0.0.1:8787/?url=https://apnews.com/article/ireland-grok-deepfak
 ```
 
 ## Config
-
-Endpoints:
-- `GET /healthz`
-- `GET /metrics` (JSON)
 
 | Setting | Where | Default | Notes |
 | --- | --- | --- | --- |
@@ -40,16 +33,3 @@ Endpoints:
 | `READER_ENGINE` | env | - | alias for `PREFERRED_ENGINE` |
 | `PREFER_FETCH_DOMAINS` | env | - | comma-separated domains; auto mode prefers fetch |
 | `PREFER_PLAYWRIGHT_DOMAINS` | env | - | comma-separated domains; auto mode prefers Playwright |
-
-Playwright:
-
-```bash
-npx playwright install chromium
-```
-
-If you are installing from scratch:
-
-```bash
-npm install
-npx playwright install chromium
-```
