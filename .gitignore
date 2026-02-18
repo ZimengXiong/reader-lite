@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment
+.env
+
+# OS
+.DS_Store
+
+# backup
+.git.upstream-backup-*/
+
+# Playwright
+playwright-report/
+test-results/
+
+# local artifacts
+batch_test_results.json
+
+# scrape outputs
+runs/
