@@ -47,8 +47,6 @@ function looksBlockedOrUseless(input) {
 
   const lower = html.toLowerCase();
 
-  // Many real articles embed botwall/captcha vendor scripts without actually blocking the content.
-  // Treat these hints as "soft" signals unless the page is otherwise clearly a block page.
   const hardNeedles = [
     'verify you are human',
     'unusual traffic',
@@ -70,15 +68,12 @@ function looksBlockedOrUseless(input) {
     const likelyArticle =
       lower.includes('<article') ||
       lower.includes('property="og:type" content="article"') ||
-      // AP News embeds this on real story pages.
       lower.includes('data-named-page-type="article"');
 
-    // If it looks like a real article and isn't tiny, don't treat it as blocked.
     if (likelyArticle && html.length > 8000) {
       return { blocked: false };
     }
 
-    // Otherwise, soft signals + small/odd pages likely indicate a block page.
     if (html.length < 5000 || !likelyArticle) {
       return { blocked: true, reason: `botwall_hint: ${snippet(lower, 100)}` };
     }

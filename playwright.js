@@ -68,7 +68,6 @@ function getPlaywrightStats() {
 
 async function loadPlaywright() {
   try {
-    // playwright is optionalDependency
     return require('playwright');
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
@@ -86,7 +85,6 @@ async function getBrowser() {
       try {
         await browser.close();
       } catch {
-        // ignore
       }
     };
     process.once('exit', close);
@@ -105,7 +103,6 @@ async function closeBrowser() {
   try {
     await b.close();
   } catch {
-    // ignore
   }
 }
 
@@ -122,7 +119,6 @@ async function scrapeDomWithPlaywright(url, timeoutMs) {
   });
   const page = await ctx.newPage();
   try {
-    // Speed: block heavy resources that aren't needed for Readability extraction.
     await page.route('**/*', (route) => {
       const req = route.request();
       const typ = req.resourceType();
@@ -134,7 +130,6 @@ async function scrapeDomWithPlaywright(url, timeoutMs) {
 
     await page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: timeoutMs });
 
-    // Keep this short: many sites never truly go network-idle.
     await page.waitForLoadState('load', { timeout: Math.min(timeoutMs, 5000) }).catch(() => undefined);
     await page.waitForLoadState('networkidle', { timeout: Math.min(timeoutMs, 2000) }).catch(() => undefined);
 

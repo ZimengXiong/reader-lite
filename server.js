@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const http = require('node:http');
 const { convertUrlToMarkdown } = require('./worker');
 const { getPlaywrightStats } = require('./playwright');
@@ -27,12 +25,10 @@ function parseTargetUrl(reqUrl) {
     const q = (u.searchParams.get('url') || '').trim();
     return q || null;
   }
-  // Jina-style: /https://example.com/path
   const raw = decodeURIComponent(u.pathname.slice(1));
   if (raw.startsWith('http://') || raw.startsWith('https://')) {
     return raw;
   }
-  // Allow /example.com as shorthand
   if (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(raw)) {
     return `https://${raw}`;
   }

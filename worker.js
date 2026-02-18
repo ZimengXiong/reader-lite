@@ -57,12 +57,10 @@ async function convertUrlToMarkdown(input) {
         throw err;
       }
 
-      // If the page looked blocked and Playwright is busy, fail fast instead of returning a likely block page.
       if (err && err.statusCode === 429 && blockedDetected) {
         throw err;
       }
 
-      // In auto mode, if we already have a fetch result, return that instead of failing.
       if (fetchedOk && html) {
         engineUsed = 'fetch';
         warnings.push(`playwright unavailable/failed (${msg}); returning fetch result instead`);
@@ -72,7 +70,6 @@ async function convertUrlToMarkdown(input) {
     }
   }
 
-  // If fetch failed, and playwright wasn't allowed, bail.
   if (!html && !fetchedOk) {
     throw new Error('no HTML extracted');
   }
