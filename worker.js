@@ -1,6 +1,7 @@
 const { fetchHtml, looksBlockedOrUseless } = require('./fetching');
 const { scrapeDomWithPlaywright } = require('./playwright');
 const { htmlToMarkdown } = require('./markdown');
+const { getSelectorForUrl } = require('./scraper_rules');
 
 function parseDomainListEnv(name) {
   const raw = (process.env[name] || '').trim();
@@ -105,7 +106,8 @@ async function convertUrlToMarkdown(input) {
     throw new Error('no HTML extracted');
   }
 
-  const markdown = await htmlToMarkdown(html, finalUrl);
+  const selector = getSelectorForUrl(new URL(finalUrl));
+  const markdown = await htmlToMarkdown(html, finalUrl, { selector, title });
   return {
     url: input.url,
     finalUrl,

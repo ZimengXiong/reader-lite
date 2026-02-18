@@ -33,3 +33,4 @@ curl 'http://127.0.0.1:8787/?url=https://apnews.com/article/ireland-grok-deepfak
 | `READER_ENGINE` | env | - | alias for `PREFERRED_ENGINE` |
 | `PREFER_FETCH_DOMAINS` | env | - | comma-separated domains; auto mode prefers fetch |
 | `PREFER_PLAYWRIGHT_DOMAINS` | env | - | comma-separated domains; auto mode prefers Playwright |
+| `SCRAPER_RULES_FILE` | env | - | JSON map of domain -> CSS selector |
