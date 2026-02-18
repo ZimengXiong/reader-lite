@@ -71,7 +71,7 @@ async function loadPlaywright() {
     return require('playwright');
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
-    throw new Error(`playwright not installed. Install with: npm i playwright && npx playwright install chromium. Original: ${msg}`);
+    throw new Error(`playwright not installed. Run: npm install && npx playwright install chromium. Original: ${msg}`);
   }
 }
 

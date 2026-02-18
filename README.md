@@ -41,9 +41,15 @@ Endpoints:
 | `PREFER_FETCH_DOMAINS` | env | - | comma-separated domains; auto mode prefers fetch |
 | `PREFER_PLAYWRIGHT_DOMAINS` | env | - | comma-separated domains; auto mode prefers Playwright |
 
-Playwright (optional):
+Playwright:
 
 ```bash
-npm i playwright
+npx playwright install chromium
+```
+
+If you are installing from scratch:
+
+```bash
+npm install
 npx playwright install chromium
 ```
