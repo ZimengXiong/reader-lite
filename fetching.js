@@ -65,18 +65,7 @@ function looksBlockedOrUseless(input) {
 
   const hasSoft = softNeedles.some((n) => lower.includes(n));
   if (hasSoft) {
-    const likelyArticle =
-      lower.includes('<article') ||
-      lower.includes('property="og:type" content="article"') ||
-      lower.includes('data-named-page-type="article"');
-
-    if (likelyArticle && html.length > 8000) {
-      return { blocked: false };
-    }
-
-    if (html.length < 5000 || !likelyArticle) {
-      return { blocked: true, reason: `botwall_hint: ${snippet(lower, 100)}` };
-    }
+    return { blocked: true, reason: `botwall_hint: ${snippet(lower, 100)}` };
   }
 
   return { blocked: false };

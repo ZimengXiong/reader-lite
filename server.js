@@ -37,9 +37,24 @@ function parseTargetUrl(reqUrl) {
 
 function parseEngine(reqUrl) {
   const u = new URL(reqUrl || '/', 'http://localhost');
-  const e = (u.searchParams.get('engine') || 'auto').trim().toLowerCase();
+  const e = (u.searchParams.get('engine') || '').trim().toLowerCase();
+  if (!e) return null;
   if (e === 'auto' || e === 'fetch' || e === 'playwright') return e;
-  return 'auto';
+  return null;
+}
+
+function parseEngineFromEnv() {
+  const v = (process.env.PREFERRED_ENGINE || process.env.READER_ENGINE || '').trim().toLowerCase();
+  if (!v) return null;
+  if (v === 'auto' || v === 'fetch' || v === 'playwright') return v;
+  return null;
+}
+
+function parseEngineFromHeader(req) {
+  const h = (pickHeader(req, 'x-engine') || '').trim().toLowerCase();
+  if (!h) return null;
+  if (h === 'auto' || h === 'fetch' || h === 'playwright') return h;
+  return null;
 }
 
 function parseTimeoutMs(reqUrl) {
@@ -77,7 +92,7 @@ async function handler(req, res) {
       );
     }
 
-    const engine = parseEngine(req.url);
+    const engine = parseEngineFromHeader(req) || parseEngine(req.url) || parseEngineFromEnv() || 'auto';
     const timeoutMs = parseTimeoutMs(req.url);
     const result = await convertUrlToMarkdown({
       url: target,
