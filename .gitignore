@@ -19,8 +19,5 @@ yarn-error.log*
 playwright-report/
 test-results/
 
-# local artifacts
-batch_test_results.json
-
 # scrape outputs
 runs/
