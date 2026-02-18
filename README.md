@@ -1,8 +1,12 @@
 # reader-lite
 
-Deterministic URL -> Markdown (no AI/LLMs).
+Turn an article URL into Markdown.
 
-It fetches a page (or renders it with Playwright) and converts the main article content to Markdown.
+## How it works
+
+- Fetch HTML over HTTP.
+- If `engine=auto` and the fetch looks blocked, render the page with Playwright (if installed).
+- Run Mozilla Readability, then Turndown (GFM) to produce Markdown.
 
 ## Quickstart
 
@@ -16,66 +20,30 @@ Server defaults to `http://127.0.0.1:8787`.
 ## Use
 
 ```bash
-curl 'http://127.0.0.1:8787/https://steipete.me/posts/just-talk-to-it'
-curl 'http://127.0.0.1:8787/https://apnews.com/article/ireland-grok-deepfakes-eu-privacy-9d3d096a1f4dc0baddde3d5d91e050b7'
+curl 'http://127.0.0.1:8787/?url=https://apnews.com/article/ireland-grok-deepfakes-eu-privacy-9d3d096a1f4dc0baddde3d5d91e050b7'
 ```
-
-Query param form:
-
-```bash
-curl 'http://127.0.0.1:8787/?url=https://steipete.me/posts/just-talk-to-it'
-```
-
-Debug JSON:
-
-```bash
-curl -H 'Accept: application/json' 'http://127.0.0.1:8787/https://steipete.me/posts/just-talk-to-it'
-```
-
-## How it works
-
-- Fetch HTML over HTTP.
-- If `engine=auto` and the fetch looks blocked, fall back to Playwright (if installed).
-- Run Mozilla Readability, then Turndown (GFM) to produce Markdown.
 
 ## Config
-
-Options:
-- `engine=auto|fetch|playwright`
-- `timeoutMs=30000`
-
-Engine can also be set via:
-- header: `X-Engine: auto|fetch|playwright`
-- env: `PREFERRED_ENGINE` or `READER_ENGINE`
-- env (auto mode): `PREFER_PLAYWRIGHT_DOMAINS=apnews.com,nytimes.com`
-
-Env:
-- `READER_HOST` (default `127.0.0.1`)
-- `READER_PORT` (default `8787`)
 
 Endpoints:
 - `GET /healthz`
 - `GET /metrics` (JSON)
+
+| Setting | Where | Default | Notes |
+| --- | --- | --- | --- |
+| `engine` | query | `auto` | `auto` / `fetch` / `playwright` |
+| `timeoutMs` | query | `30000` | total timeout budget |
+| `X-Engine` | header | - | overrides `engine` query |
+| `READER_HOST` | env | `127.0.0.1` | bind address |
+| `READER_PORT` | env | `8787` | listen port |
+| `PREFERRED_ENGINE` | env | - | sets default engine |
+| `READER_ENGINE` | env | - | alias for `PREFERRED_ENGINE` |
+| `PREFER_FETCH_DOMAINS` | env | - | comma-separated domains; auto mode prefers fetch |
+| `PREFER_PLAYWRIGHT_DOMAINS` | env | - | comma-separated domains; auto mode prefers Playwright |
 
 Playwright (optional):
 
 ```bash
 npm i playwright
 npx playwright install chromium
-```
-
-## Rendering tip
-
-If you render the produced Markdown on a web page and want wrapped code blocks:
-
-```css
-pre {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}
-
-code {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}
 ```

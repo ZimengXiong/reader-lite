@@ -18,6 +18,7 @@ function hostMatches(host, domain) {
 }
 
 const PREFER_PLAYWRIGHT_DOMAINS = parseDomainListEnv('PREFER_PLAYWRIGHT_DOMAINS');
+const PREFER_FETCH_DOMAINS = parseDomainListEnv('PREFER_FETCH_DOMAINS');
 
 /**
  * @param {{ url: string, engine: 'auto'|'fetch'|'playwright', timeoutMs: number }} input
@@ -26,9 +27,18 @@ async function convertUrlToMarkdown(input) {
   const warnings = [];
   const parsed = new URL(input.url);
 
-  const preferredEngine = (input.engine === 'auto' && PREFER_PLAYWRIGHT_DOMAINS.length)
-    ? (PREFER_PLAYWRIGHT_DOMAINS.some((d) => hostMatches(parsed.hostname.toLowerCase(), d)) ? 'playwright' : 'auto')
-    : input.engine;
+  const preferredEngine = (() => {
+    if (input.engine !== 'auto') return input.engine;
+
+    const host = parsed.hostname.toLowerCase();
+    if (PREFER_FETCH_DOMAINS.length && PREFER_FETCH_DOMAINS.some((d) => hostMatches(host, d))) {
+      return 'fetch';
+    }
+    if (PREFER_PLAYWRIGHT_DOMAINS.length && PREFER_PLAYWRIGHT_DOMAINS.some((d) => hostMatches(host, d))) {
+      return 'playwright';
+    }
+    return 'auto';
+  })();
 
   let engineUsed = preferredEngine;
   let html = '';
